@@ -41,7 +41,21 @@ public class Scanner {
             case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL: TokenType.EQUAL); break;
             case '<': addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
             case '>': addToken(match('=') ? TokenType.GREATER_EQUAL: TokenType.GREATER); break;
-            // dw that backslash '/' isn't here.
+            case '/':
+                      if (match('/')) {
+                          while (peek() != '\n' && !isAtEnd()) advance();
+                      }
+            case ' ':
+            case '\r': // Ignore whitespace.
+            case '\t': break;
+
+            case '\n':
+                line++; // increment th eline when we hit a newline
+                break;
+
+            default:
+                Lox.error(line, "Unexpected character.");
+                break;
         }
     }
     private boolean match(char expected) {
@@ -51,6 +65,12 @@ public class Scanner {
         return true;
         // this was described in the book as a 'conditional advance'
     }
+
+    private char peek() {
+        if (isAtEnd()) return '\0'; // empty if at end
+        return source.charAt(current); // check next char without advancing
+    }
+
     private char advance(){
         return source.charAt(current++); // get char and increment current
     }
