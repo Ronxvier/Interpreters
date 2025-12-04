@@ -23,6 +23,7 @@ public class Scanner {
         Notating this because for some reason it wasn't obvious to me when I read it.*/
         return tokens;
     }
+
     private void scanToken(){
         char c = advance();
         switch (c) {
