@@ -49,14 +49,40 @@ public class Scanner {
             case '\r': // Ignore whitespace.
             case '\t': break;
 
+            case '"': string(); break;
+
             case '\n':
-                line++; // increment th eline when we hit a newline
+                line++; // increment the line when we hit a newline
                 break;
 
             default:
                 Lox.error(line, "Unexpected character.");
                 break;
         }
+    }
+
+    private void string() {
+        /* while we don't hit the end of the
+        file nor the end of the string, keep advancing.
+        also, if we hit the end of a line, we have to increment the line count.*/
+
+        /* Oh, also, because there's no breaking the string when the line ends,
+        we support multi line strings. */
+        
+        while (peek()!= '"' && !isAtEnd()){
+            if (peek() == '\n') line++;
+            advance();
+        }
+
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated string.");
+            return;
+        }
+        // grab the closing '"'.
+        advance();
+        // Trim the quotes that surround the string
+        String value = source.substring(start+1, current-1);
+        addToken(TokenType.STRING,value);
     }
     private boolean match(char expected) {
         if (isAtEnd()) return false;
@@ -75,7 +101,8 @@ public class Scanner {
         return source.charAt(current++); // get char and increment current
     }
 
-    private void addToken(TokenType type) { // this will be shorthand for the following method
+    private void addToken(TokenType type) {
+        // this will be shorthand for the following method
         addToken(type, null);
     }
 
