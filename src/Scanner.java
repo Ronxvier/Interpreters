@@ -44,6 +44,8 @@ public class Scanner {
             case '/':
                       if (match('/')) {
                           while (peek() != '\n' && !isAtEnd()) advance();
+                      } else {
+                          addToken(TokenType.SLASH);
                       }
             case ' ':
             case '\r': // Ignore whitespace.
@@ -56,10 +58,32 @@ public class Scanner {
                 break;
 
             default:
-                Lox.error(line, "Unexpected character.");
-                break;
+                if (isDigit(c))
+                    number();
+                else {
+                    Lox.error(line, "Unexpected character.");
+                    break;
+                }
         }
     }
+
+    private void number() {
+        while (isDigit(peek())) advance();
+
+        // look for fractional part
+        if(peek() == '.' && isDigit(peekNext())){
+            advance(); // consume the '.'
+            while(isDigit(peek())) advance(); // get the nums after
+        }
+        addToken(TokenType.NUMBER,
+                Double.parseDouble(source.substring(start,current))); // doubles are like floats
+    }
+
+    private char peekNext() {
+        if (current+1>= source.length()) return '\0';
+        return source.charAt(current+1); // remember current is always at the "next" character
+    }
+
 
     private void string() {
         /* while we don't hit the end of the
@@ -68,7 +92,7 @@ public class Scanner {
 
         /* Oh, also, because there's no breaking the string when the line ends,
         we support multi line strings. */
-        
+
         while (peek()!= '"' && !isAtEnd()){
             if (peek() == '\n') line++;
             advance();
@@ -95,6 +119,10 @@ public class Scanner {
     private char peek() {
         if (isAtEnd()) return '\0'; // empty if at end
         return source.charAt(current); // check next char without advancing
+    }
+
+    private boolean isDigit(char c) {
+        return c>= '0' && c<='9'; // uses some string value system idek
     }
 
     private char advance(){
