@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Scanner {
     private final String source; // source code stored in string
@@ -7,6 +9,30 @@ public class Scanner {
     private int start = 0; // points to the first char in the lexeme
     private int current = 0; // points to the char currently considered
     private int line = 1; // tracks what source line current is on
+
+    private static final Map<String, TokenType> keywords; // HASHMAP MENTIONED
+    static {
+        /* More Java semantics, this static keyword makes it such that this
+        hashmap belongs to the class itself rather than any specific object of this class.*/
+        keywords = new HashMap<>();
+        keywords.put("and",    TokenType.AND);
+        keywords.put("class",  TokenType.CLASS);
+        keywords.put("else",   TokenType.ELSE);
+        keywords.put("false",  TokenType.FALSE);
+        keywords.put("for",    TokenType.FOR);
+        keywords.put("fun",    TokenType.FUN);
+        keywords.put("if",     TokenType.IF);
+        keywords.put("nil",    TokenType.NIL);
+        keywords.put("or",     TokenType.OR);
+        keywords.put("print",  TokenType.PRINT);
+        keywords.put("return", TokenType.RETURN);
+        keywords.put("super",  TokenType.SUPER);
+        keywords.put("this",   TokenType.THIS);
+        keywords.put("true",   TokenType.TRUE);
+        keywords.put("var",    TokenType.VAR);
+        keywords.put("while",  TokenType.WHILE);
+    }
+
     Scanner(String source) { // scanner constructor
         this.source = source;
     }
@@ -44,6 +70,7 @@ public class Scanner {
             case '/':
                       if (match('/')) {
                           while (peek() != '\n' && !isAtEnd()) advance();
+
                       } else {
                           addToken(TokenType.SLASH);
                       }
@@ -60,6 +87,10 @@ public class Scanner {
             default:
                 if (isDigit(c))
                     number();
+                else if (isAlpha(c)){
+                    // by the way, this means you can't start variables w a number.
+                    identifier();
+                }
                 else {
                     Lox.error(line, "Unexpected character.");
                     break;
@@ -77,6 +108,30 @@ public class Scanner {
         }
         addToken(TokenType.NUMBER,
                 Double.parseDouble(source.substring(start,current))); // doubles are like floats
+    }
+
+    private void identifier() {
+        while (isAlphaNumeric(peek())) {
+            advance();
+        }
+        String text = source.substring(start,current);
+        TokenType type = keywords.get(text);
+        if (type == null)
+                type = TokenType.IDENTIFIER;
+        addToken(type);
+        /* remember when using this method, start and current are automatically used as
+        indices to name the token.
+        I seem to only be remembering how nice the start current iteration system is when it comes to this.
+        */
+    }
+
+    private boolean isAlpha(char input) {
+        return (input >= 'a' && input <= 'z')
+                || (input >= 'A' && input <= 'Z') || input == '_';
+    }
+
+    private boolean isAlphaNumeric(char input) {
+        return isAlpha(input) || isDigit(input);
     }
 
     private char peekNext() {

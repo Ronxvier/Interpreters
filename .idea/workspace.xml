@@ -38,6 +38,7 @@
   &quot;keyToString&quot;: {
     &quot;Application.Lox.executor&quot;: &quot;Run&quot;,
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Scanner.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/ronelxavier/Documents/GitHub/Interpreters&quot;,
@@ -56,6 +57,11 @@
     </configuration>
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Interpreters" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Scanner" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Scanner" />
       <module name="Interpreters" />
       <method v="2" />
     </configuration>

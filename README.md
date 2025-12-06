@@ -1,2 +1,2 @@
 # Interpreters
-Notes and interpreter implementations following Robert Nystrom’s Crafting Interpreters.
+Jlox, an interpreted programming language implementation following Robert Nystrom’s Crafting Interpreters.
