@@ -64,3 +64,40 @@ public class Lox {
     }
 }
 
+abstract class Expr {
+    static class Binary extends Expr {
+        final Expr left;
+        final Token operator;
+        final Expr right;
+        Binary(Expr left, Token operator, Expr right) {
+            this.left = left;
+            this.operator = operator;
+            this.right =  right;
+        }
+    }
+
+    static class Literal extends Expr {
+        final Token value;
+        Literal(Token value) {
+            this.value = value;
+        }
+    }
+
+    static class Unary extends Expr {
+        final Token prefix;
+        Unary(Token prefix) {
+            this.prefix = prefix;
+        }
+    }
+
+    static class Grouping {
+        final Token leftParen;
+        final Expr expression;
+        final Token rightParen;
+        Grouping(Token leftParen, Expr expression, Token rightParen) {
+            this.leftParen = leftParen;
+            this.rightParen = rightParen;
+            this.expression = expression;
+        }
+    }
+}
