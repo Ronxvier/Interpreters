@@ -77,26 +77,24 @@ abstract class Expr {
     }
 
     static class Literal extends Expr {
-        final Token value;
-        Literal(Token value) {
+        final Object value;
+        Literal(Object value) {
             this.value = value;
         }
     }
 
     static class Unary extends Expr {
-        final Token prefix;
-        Unary(Token prefix) {
-            this.prefix = prefix;
+        final Token operator;
+        final Expr right;
+        Unary(Token operator, Expr right) {
+            this.operator = operator;
+            this.right = right;
         }
     }
 
     static class Grouping {
-        final Token leftParen;
         final Expr expression;
-        final Token rightParen;
-        Grouping(Token leftParen, Expr expression, Token rightParen) {
-            this.leftParen = leftParen;
-            this.rightParen = rightParen;
+        Grouping(Expr expression) {
             this.expression = expression;
         }
     }
